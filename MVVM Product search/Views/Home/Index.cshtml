@@ -1,4 +1,7 @@
-﻿@{
+﻿
+@model List<MVVM_Product_search.Models.TrainingProduct>
+
+@{
     ViewBag.Title = "CK Product Search";
 }
 
@@ -7,26 +10,49 @@
     //hidden fields below here
 
 
- //search area below here
- <div class="panel panel-primary">
-     <div class="panel-heading">
-         <h1 class=" ="panel-title">Search For Products</h1>"
-     </div>
-     <div class="panel-body">
-         <div class="form-group">
-             @Html.Label("Product Name")
-             @Html.TextBox("SearchProductName", ""), new { @class="form-control" })
-         </div>
-     </div>
+    //search area below here
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h1 class=" ="panel-title">Search For Products</h1>
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                @Html.Label("Product Name")
+                @Html.TextBox("SearchProductName", "", new { @class = "form-control" })
+            </div>
+        </div>
 
-     <div class="panel-footer"></div>
- </div>
+        <div class="panel-footer">
+            <button id="=" btnSearch" class="btn btn-sm btn-primary">Search</button>
+            <button id="=" btnSearch" class="btn btn-sm btn-primary">Reset</button>
+        </div>
+    </div>
 
 
- //list area below here
+    //list area below here
+    <table class="table table-condensed table-bordered table-striped table-hover table-responsive">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Introduction Date</th>
+                <th>Url</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
 
+                    <td>@item.IntroductionDate</td>
+                    <td>@item.Url</td>
+                    <td>@item.Price.ToString("c")</td> @*change model to use currency????*@
+                </tr>
+            }
+        </tbody>
 
-
+    </table>
 
 }
 
@@ -37,4 +63,4 @@
 
 
     </script>
-    }
+}
