@@ -11,23 +11,22 @@ namespace MVVM_Product_search.Controllers
     {
         public ActionResult Index()
         {
-            TrainingProductManager mgr = new TrainingProductManager();
+            TrainingProductViewModel vm = new TrainingProductViewModel();
+           
+            vm.HandleRequest();
 
-            return View(mgr.Get());
+            return View(vm);
         }
 
-        public ActionResult About()
+        [HttpPost]
+        public ActionResult Index(TrainingProductViewModel vm)
         {
-            ViewBag.Message = "Your application description page.";
+            vm.HandleRequest();
+            ModelState.Clear();
 
-            return View();
+            return View(vm);
         }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
 
-            return View();
-        }
     }
 }

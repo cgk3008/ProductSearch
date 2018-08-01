@@ -148,6 +148,7 @@
     </Compile>
     <Compile Include="Models\TrainingProduct.cs" />
     <Compile Include="Models\TrainingProductManager.cs" />
+    <Compile Include="Models\TrainingProductViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
