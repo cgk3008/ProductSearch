@@ -11,55 +11,92 @@
     @Html.HiddenFor(m => m.EventCommand)
 
     //search area below here
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h1 class=" ="panel-title">Search For Products</h1>
-        </div>
-        <div class="panel-body">
-            <div class="form-group">
-                @Html.LabelFor(m => m.SearchEntity.ProductName, "Product Name")
-                @Html.TextBoxFor(m => m.SearchEntity.ProductName, new { @class = "form-control" })
+    if (Model.IsSearchAreaVisible)
+    {
+
+
+
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h1 class=" ="panel-title">Search For Products</h1>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.SearchEntity.ProductName, "Product Name")
+                    @Html.TextBoxFor(m => m.SearchEntity.ProductName, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="panel-footer">
+                <button id="=" btnSearch" class="btn btn-sm btn-primary" data-pdsa-action="search">
+                    <i class="glyphicon glyphicon-search"></i>&nbsp;Search
+                </button>
+                <button id="=" btnSearch" class="btn btn-sm btn-primary" data-pdsa-action="resetsearch">
+                    <i class="glyphicon glyphicon-search"></i>&nbsp;Reset
+                </button>
+                <button id="=" btnSearch" class="btn btn-sm btn-primary" data-pdsa-action="add">
+                    <i class="glyphicon glyphicon-search"></i>&nbsp;Add
+                </button>
             </div>
         </div>
+    }
 
-        <div class="panel-footer">
-            <button id="=" btnSearch" class="btn btn-sm btn-primary" data-pdsa-action="search">
-                <i class="glyphicon glyphicon-search"></i>&nbsp;Search
-            </button>
-            <button id="=" btnSearch" class="btn btn-sm btn-primary" data-pdsa-action="resetsearch">
-                <i class="glyphicon glyphicon-search"></i>&nbsp;Reset
-            </button>
+    //begin DETAIL AREA
+
+    if ( Model.IsDetailAreaVisible)
+    {
+        <div class="panel panel-primary">
+
+            <div class="panel-heading">
+                <h1 class="panel-title">Product Information</h1>
+            </div>
+
+            <div class="panel-body">
+                <div class="form-group">
+
+                </div>
+
+            </div>
+
+
         </div>
-    </div>
+
+    }
+
+    //end DETAIL AREA
 
 
     //list area below here
-    <table class="table table-condensed table-bordered table-striped table-hover table-responsive">
-        <thead>
-            <tr>
-                <th>Product Name</th>
-                <th>Introduction Date</th>
-                <th>Url</th>
-                <th>Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Products)
-            {
+
+    if (Model.IsListAreaVisible)
+    {
+        <table class="table table-condensed table-bordered table-striped table-hover table-responsive">
+            <thead>
                 <tr>
-                    <td>@item.ProductName</td>
-
-                    <td>@item.IntroductionDate</td>
-                    <td>@item.Url</td>
-                    <td>@item.Price.ToString("c")</td> @*change model to use currency????*@
+                    <th>Product Name</th>
+                    <th>Introduction Date</th>
+                    <th>Url</th>
+                    <th>Price</th>
                 </tr>
-            }
-        </tbody>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Products)
+                {
+                    <tr>
+                        <td>@item.ProductName</td>
 
-    </table>
+                        <td>@item.IntroductionDate</td>
+                        <td>@item.Url</td>
+                        <td>@item.Price.ToString("c")</td> @*change model to use currency????*@
+                    </tr>
+                }
+            </tbody>
 
+        </table>
+
+    }
 }
-
 
 @section scripts
 {
