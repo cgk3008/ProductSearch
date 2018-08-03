@@ -9,22 +9,31 @@ namespace MVVM_Product_search.Models
     {
         public TrainingProductViewModel()
         {
-            IsListAreaVisible = true;
-            IsSearchAreaVisible = true;
-            IsDetailAreaVisible = false;
+            Init();
 
             Products = new List<TrainingProduct>();
             SearchEntity = new TrainingProduct();
-            EventCommand = "List";
+            Entity = new TrainingProduct();
+           
         }
 
+        public TrainingProduct Entity { get; set; }
         public string EventCommand { get; set; }
         public List<TrainingProduct> Products { get; set; }
         public TrainingProduct SearchEntity { get; set; }
+        public bool IsValid { get; set; }
+        public string Mode { get; set; }
 
         public bool IsDetailAreaVisible { get; set; }
         public bool IsListAreaVisible { get; set; }
         public bool IsSearchAreaVisible { get; set; }
+
+        private void Init()
+        {
+            EventCommand = "List";
+            ListMode();
+
+        }
 
         public void HandleRequest()
         {
@@ -44,11 +53,21 @@ namespace MVVM_Product_search.Models
                     Get();
                     break;
 
+                case "save":
+                    Save();
+                    if (IsValid)
+                    {
+                        Get();
+                    }
+                    break;
+
                 case "add":
-                    
-                    IsListAreaVisible = false;
-                    IsSearchAreaVisible = false;
-                    IsDetailAreaVisible = true;
+                    Add();
+                    break;
+
+                case "cancel":
+                    ListMode();
+                    Get();
                     break;
 
                 default:
@@ -56,6 +75,58 @@ namespace MVVM_Product_search.Models
             }
 
         }
+
+        private void Save()
+        {
+            if (IsValid)
+            {
+                if (Mode == "Add")
+                {
+                    //add data to database
+                }
+            }
+            else
+            {
+                if (Mode == "Add")
+                {
+                    AddMode();
+                }
+            }
+            
+        }
+
+        private void ListMode()
+        {
+            IsValid = true;
+
+            IsListAreaVisible = true;
+            IsSearchAreaVisible = true;
+            IsDetailAreaVisible = false;
+
+            Mode = "List";
+        }
+
+        private void Add()
+        {
+            IsValid = true;
+
+            Entity = new TrainingProduct();
+            Entity.IntroductionDate = DateTimeOffset.Now;
+            Entity.Url = "http://";
+            Entity.Price = 0;
+
+            AddMode();
+        }
+
+        private void AddMode()
+        {
+            IsListAreaVisible = false;
+            IsSearchAreaVisible = false;
+            IsDetailAreaVisible = true;
+
+            Mode = "Add";
+        }
+
         private void ResetSearch()
         {
             SearchEntity = new TrainingProduct();

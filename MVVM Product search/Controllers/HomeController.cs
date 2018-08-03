@@ -21,8 +21,13 @@ namespace MVVM_Product_search.Controllers
         [HttpPost]
         public ActionResult Index(TrainingProductViewModel vm)
         {
+            vm.IsValid = ModelState.IsValid;
             vm.HandleRequest();
-            ModelState.Clear();
+
+            if (vm.IsValid)
+            {
+                ModelState.Clear();
+            }
 
             return View(vm);
         }
