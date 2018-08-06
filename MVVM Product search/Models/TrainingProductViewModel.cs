@@ -1,39 +1,34 @@
-﻿using System;
+﻿using PTCCommon;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
 namespace MVVM_Product_search.Models
 {
-    public class TrainingProductViewModel
+    public class TrainingProductViewModel : ViewModelBase
     {
-        public TrainingProductViewModel()
+        public TrainingProductViewModel() : base()
         {
-            Init();
+            
 
+       
+
+        }
+
+        public TrainingProduct Entity { get; set; }       
+        public List<TrainingProduct> Products { get; set; }
+        public TrainingProduct SearchEntity { get; set; }
+
+        protected override void Init()
+        {
             Products = new List<TrainingProduct>();
             SearchEntity = new TrainingProduct();
             Entity = new TrainingProduct();
-           
+
+            base.Init();
         }
 
-        public TrainingProduct Entity { get; set; }
-        public string EventCommand { get; set; }
-        public List<TrainingProduct> Products { get; set; }
-        public TrainingProduct SearchEntity { get; set; }
-        public bool IsValid { get; set; }
-        public string Mode { get; set; }
-
-        public bool IsDetailAreaVisible { get; set; }
-        public bool IsListAreaVisible { get; set; }
-        public bool IsSearchAreaVisible { get; set; }
-
-        private void Init()
-        {
-            EventCommand = "List";
-            ListMode();
-
-        }
 
         public void HandleRequest()
         {
@@ -51,6 +46,19 @@ namespace MVVM_Product_search.Models
                 case "resetsearch":
                     ResetSearch();
                     Get();
+                    break;
+
+                case "edit":
+                    //System.Diagnostics.Debugger.Break(); used this code to stop and lok at code and inspect web page
+                    IsValid = true;
+                    Edit();
+
+
+                    break;
+
+                case "delete":                    
+                    ResetSearch();
+                    Delete();
                     break;
 
                 case "save":
@@ -78,33 +86,49 @@ namespace MVVM_Product_search.Models
 
         private void Save()
         {
-            if (IsValid)
+
+            TrainingProductManager mgr = new TrainingProductManager();
+            if (Mode == "Add")
             {
-                if (Mode == "Add")
-                {
-                    //add data to database
-                }
+                mgr.Insert(Entity);
             }
             else
+            {
+                mgr.Update(Entity);
+            }
+
+            ValidationErrors = mgr.ValidationErrors;
+            if (ValidationErrors.Count > 0)
+            {
+                IsValid = false;
+            }
+
+            if (!IsValid)           
             {
                 if (Mode == "Add")
                 {
                     AddMode();
                 }
+                else
+                {
+                    EditMode();
+                }
             }
-            
+
         }
 
-        private void ListMode()
+        private void Delete()
         {
-            IsValid = true;
+            TrainingProductManager mgr = new TrainingProductManager();
+            Entity = new TrainingProduct();
+            Entity.ProductId = Convert.ToInt32(EventArgument);
 
-            IsListAreaVisible = true;
-            IsSearchAreaVisible = true;
-            IsDetailAreaVisible = false;
-
-            Mode = "List";
+            mgr.Delete(Entity);
+            Get();
+            ListMode();
         }
+
+      
 
         private void Add()
         {
@@ -125,6 +149,24 @@ namespace MVVM_Product_search.Models
             IsDetailAreaVisible = true;
 
             Mode = "Add";
+        }
+
+
+        private void Edit()
+        {           
+            TrainingProductManager mgr = new TrainingProductManager();
+
+            Entity = mgr.Get(Convert.ToInt32(EventArgument));         
+
+            EditMode();
+        }
+        private void EditMode()
+        {
+            IsListAreaVisible = false;
+            IsSearchAreaVisible = false;
+            IsDetailAreaVisible = true;
+
+            Mode = "Edit";
         }
 
         private void ResetSearch()

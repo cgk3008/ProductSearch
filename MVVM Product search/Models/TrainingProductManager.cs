@@ -7,8 +7,75 @@ namespace MVVM_Product_search.Models
 {
     public class TrainingProductManager
     {
-public List<TrainingProduct> Get(TrainingProduct entity)
+
+        public TrainingProductManager()
+        {
+            ValidationErrors = new List<KeyValuePair<string, string>>();
+        }
+        public List<KeyValuePair<string, string>> ValidationErrors { get; set; }
+
+        public bool Validate(TrainingProduct entity)
+        {
+            ValidationErrors.Clear();
+            if (!string.IsNullOrEmpty(entity.ProductName))
             {
+                if (entity.ProductName.ToLower() == entity.ProductName)
+                {
+                    ValidationErrors.Add(new KeyValuePair<string, string>("ProductName", "Product Name must not be all lower case."));
+                }
+            }
+            return (ValidationErrors.Count == 0);
+        }
+
+        public TrainingProduct Get(int productId)
+        {
+            List<TrainingProduct> list = new List<TrainingProduct>();
+            TrainingProduct ret = new TrainingProduct();
+
+            //need to call data access method here
+            list = CreateMockData();
+
+            ret = list.Find(p => p.ProductId == productId);
+
+            return ret;
+        }
+
+        public bool Update(TrainingProduct entity)
+        {
+            bool ret = false;
+
+            ret = Validate(entity);
+
+            if (ret)
+            {
+                //need  create update code here
+            }
+            return ret;
+
+           
+        }
+
+        public bool Delete(TrainingProduct entity)
+        {
+            //Delete code here
+            return true;
+        }
+
+        public bool Insert(TrainingProduct entity)
+        {
+            bool ret = false;
+
+            ret = Validate(entity);
+            if (ret)
+            {
+                //will add insert code
+            }
+            return ret;
+        }
+
+
+        public List<TrainingProduct> Get(TrainingProduct entity)
+        {
             List<TrainingProduct> ret = new List<TrainingProduct>();
 
             ret = CreateMockData();
@@ -19,7 +86,7 @@ public List<TrainingProduct> Get(TrainingProduct entity)
             }
 
             return ret;
-            }
+        }
         private List<TrainingProduct> CreateMockData()
         {
 

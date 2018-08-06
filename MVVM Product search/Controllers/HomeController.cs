@@ -29,6 +29,14 @@ namespace MVVM_Product_search.Controllers
                 ModelState.Clear();
             }
 
+            else
+            {
+                foreach (KeyValuePair<string, string> item in vm.ValidationErrors)
+                {
+                    ModelState.AddModelError(item.Key, item.Value);
+                }
+            }
+
             return View(vm);
         }
 

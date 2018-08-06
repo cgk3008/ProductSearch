@@ -10,6 +10,7 @@
     //hidden fields below here
     @Html.HiddenFor(m => m.EventCommand)
     @Html.HiddenFor(m => m.Mode)
+    @Html.HiddenFor(m => m.EventArgument)
 
     //search area below here
     if (Model.IsSearchAreaVisible)
@@ -23,25 +24,6 @@
                 <h1 class="panel-title">Search For Products</h1>
             </div>
             <div class="panel-body">
-
-                @*MESSAGE AREA*@
-
-                <div class="row">
-                    <div class="col-sm-12">
-                        @if (!Model.IsValid)
-                        {
-                            <div class="alert alert-danger alert-dismissable" role="alert">
-                                <button type="button" class="close" data-dismiss="alert">
-                                    <span aria-hidden="true">&times;</span>
-                                    <span class="sr-only">Close</span>
-                                    @Html.ValidationSummary(false)
-                                </button>
-                            </div>
-                        }
-                    </div>
-                </div>
-
-
                 <div class="form-group">
                     @Html.LabelFor(m => m.SearchEntity.ProductName, "Product Name")
                     @Html.TextBoxFor(m => m.SearchEntity.ProductName, new { @class = "form-control" })
@@ -64,7 +46,7 @@
 
     //begin DETAIL AREA
 
-    if ( Model.IsDetailAreaVisible)
+    if (Model.IsDetailAreaVisible)
     {
         <div class="panel panel-primary">
 
@@ -73,6 +55,25 @@
             </div>
 
             <div class="panel-body">
+
+
+                @*MESSAGE AREA*@
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        @if (!Model.IsValid)
+                        {
+                            <div class="alert alert-danger alert-dismissable" role="alert">
+                                <button type="button" class="close" data-dismiss="alert">
+                                    <span aria-hidden="true">&times;</span>
+                                    <span class="sr-only">Close</span>
+
+                                </button>
+                                @Html.ValidationSummary(false)
+                            </div>
+                        }
+                    </div>
+                </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.Entity.ProductName, "Product Name")
                     @Html.TextBoxFor(m => m.Entity.ProductName, new { @class = "form-control" })
@@ -103,7 +104,7 @@
                         </button>
                     </div>
                 </div>
-               
+
             </div>
 
         </div>
@@ -120,22 +121,38 @@
         <table class="table table-condensed table-bordered table-striped table-hover table-responsive">
             <thead>
                 <tr>
+                    <th class="pdsa-action-button-column"> Edit</th>
                     <th>Product Name</th>
                     <th>Introduction Date</th>
                     <th>Url</th>
                     <th>Price</th>
+                    <th class="pdsa-action-button-column"> Delete</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model.Products)
                 {
-                    <tr>
-                        <td>@item.ProductName</td>
+                <tr>
+                    <td class="pdsa-action-button-column">
+                        <a href="#" data-pdsa-action="edit" data-pdsa-val="@item.ProductId" class="btn btn-default btn-sm">
+                            <i class="glyphicon glyphicon-edit"></i>
+                        </a>
+                    </td>
+                    <td>@item.ProductName</td>
 
-                        <td>@item.IntroductionDate</td>
-                        <td>@item.Url</td>
-                        <td>@item.Price.ToString("c")</td> @*change model to use currency????*@
-                    </tr>
+                    <td>@item.IntroductionDate</td>
+                    <td>@item.Url</td>
+                    <td>@item.Price.ToString("c")</td> @*change model to use currency????*@
+                    <td class="pdsa-action-button-column">
+                        <a href="#" data-pdsa-action="delete" 
+                           data-pdsa-val="@item.ProductId" 
+                           onclick="return confirm('Delete this product?');"
+                           class="btn btn-default btn-sm">
+                            <i class="glyphicon glyphicon-trash"></i>
+                        </a>
+                    </td>
+               
+                </tr>
                 }
             </tbody>
 
@@ -152,6 +169,7 @@
                 e.preventDefault();
 
                 $("#EventCommand").val($(this).data("pdsa-action"));
+                $("#EventArgument").val($(this).data("pdsa-val"));
 
                 $("form").submit();
             });
