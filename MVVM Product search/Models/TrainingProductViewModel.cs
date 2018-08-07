@@ -1,8 +1,6 @@
 ﻿using PTCCommon;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace MVVM_Product_search.Models
 {
@@ -11,14 +9,25 @@ namespace MVVM_Product_search.Models
         public TrainingProductViewModel() : base()
         {
             
-
-       
-
         }
 
         public TrainingProduct Entity { get; set; }       
         public List<TrainingProduct> Products { get; set; }
         public TrainingProduct SearchEntity { get; set; }
+
+        public override void HandleRequest()
+        {
+            switch (EventCommand.ToLower())
+            {
+                case "CK":
+                    break;
+
+                default:
+                    break;
+            }
+
+            base.HandleRequest();
+        }
 
         protected override void Init()
         {
@@ -30,63 +39,10 @@ namespace MVVM_Product_search.Models
         }
 
 
-        public void HandleRequest()
+       
+
+        protected override void Save()
         {
-
-            switch (EventCommand.ToLower())
-            {
-                case "list":
-                    Get();
-                    break;
-
-                case "search":
-                    Get();
-                    break;
-
-                case "resetsearch":
-                    ResetSearch();
-                    Get();
-                    break;
-
-                case "edit":
-                    //System.Diagnostics.Debugger.Break(); used this code to stop and lok at code and inspect web page
-                    IsValid = true;
-                    Edit();
-
-
-                    break;
-
-                case "delete":                    
-                    ResetSearch();
-                    Delete();
-                    break;
-
-                case "save":
-                    Save();
-                    if (IsValid)
-                    {
-                        Get();
-                    }
-                    break;
-
-                case "add":
-                    Add();
-                    break;
-
-                case "cancel":
-                    ListMode();
-                    Get();
-                    break;
-
-                default:
-                    break;
-            }
-
-        }
-
-        private void Save()
-        {
-
             TrainingProductManager mgr = new TrainingProductManager();
             if (Mode == "Add")
             {
@@ -98,26 +54,11 @@ namespace MVVM_Product_search.Models
             }
 
             ValidationErrors = mgr.ValidationErrors;
-            if (ValidationErrors.Count > 0)
-            {
-                IsValid = false;
-            }
 
-            if (!IsValid)           
-            {
-                if (Mode == "Add")
-                {
-                    AddMode();
-                }
-                else
-                {
-                    EditMode();
-                }
-            }
-
+            base.Save();
         }
 
-        private void Delete()
+        protected override void Delete()
         {
             TrainingProductManager mgr = new TrainingProductManager();
             Entity = new TrainingProduct();
@@ -125,12 +66,11 @@ namespace MVVM_Product_search.Models
 
             mgr.Delete(Entity);
             Get();
-            ListMode();
-        }
+            //ListMode();
+            base.Delete();
+        }      
 
-      
-
-        private void Add()
+        protected override void Add()
         {
             IsValid = true;
 
@@ -139,47 +79,35 @@ namespace MVVM_Product_search.Models
             Entity.Url = "http://";
             Entity.Price = 0;
 
-            AddMode();
-        }
+            //AddMode();
+            base.Add();
+        }            
 
-        private void AddMode()
-        {
-            IsListAreaVisible = false;
-            IsSearchAreaVisible = false;
-            IsDetailAreaVisible = true;
-
-            Mode = "Add";
-        }
-
-
-        private void Edit()
+        protected override void Edit()
         {           
             TrainingProductManager mgr = new TrainingProductManager();
 
-            Entity = mgr.Get(Convert.ToInt32(EventArgument));         
+            Entity = mgr.Get(Convert.ToInt32(EventArgument));
 
-            EditMode();
+            //EditMode();
+            base.Edit(); // could put this ahead of code above, depends on how you want view/data/buttons etc to load
         }
-        private void EditMode()
-        {
-            IsListAreaVisible = false;
-            IsSearchAreaVisible = false;
-            IsDetailAreaVisible = true;
+       
 
-            Mode = "Edit";
-        }
-
-        private void ResetSearch()
+        protected override void ResetSearch()
         {
             SearchEntity = new TrainingProduct();
+
+            base.ResetSearch();
         }
 
-
-        private void Get()
+        protected override void Get()
         {
             TrainingProductManager mgr = new TrainingProductManager();
 
             Products = mgr.Get(SearchEntity);
+
+            base.Get();
         }
 
     }
